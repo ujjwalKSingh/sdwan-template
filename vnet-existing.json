@@ -45,9 +45,6 @@
         "type": "Microsoft.Network/virtualNetworks/subnets",
         "name": "[concat(parameters('virtualNetworkName'),'/',parameters('Subnet1Name'))]",
         "location": "[parameters('location')]",
-        "dependsOn": [
-            "[concat('Microsoft.Network/virtualNetworks/',parameters('virtualNetworkName'),'/subnets/',parameters('Subnet1Name'))]"           
-        ],
         "properties": {
           "addressPrefix": "[parameters('subnet1Prefix')]"
         }
@@ -58,7 +55,7 @@
         "name": "[concat(parameters('virtualNetworkName'),'/',parameters('Subnet2Name'))]",
         "location": "[parameters('location')]",
         "dependsOn": [
-            "[concat('Microsoft.Network/virtualNetworks/',parameters('virtualNetworkName'),'/subnets/',parameters('Subnet2Name'))]"           
+            "[concat('Microsoft.Network/virtualNetworks/',parameters('virtualNetworkName'),'/subnets/',parameters('Subnet1Name'))]"           
         ],
         "properties": {
           "addressPrefix": "[parameters('subnet2Prefix')]"
@@ -70,7 +67,7 @@
         "name": "[concat(parameters('virtualNetworkName'),'/',parameters('Subnet3Name'))]",
         "location": "[parameters('location')]",
         "dependsOn": [
-            "[concat('Microsoft.Network/virtualNetworks/',parameters('virtualNetworkName'),'/subnets/',parameters('Subnet3Name'))]"           
+            "[concat('Microsoft.Network/virtualNetworks/',parameters('virtualNetworkName'),'/subnets/',parameters('Subnet1Name'))]"           
         ],
         "properties": {
           "addressPrefix": "[parameters('subnet3Prefix')]"

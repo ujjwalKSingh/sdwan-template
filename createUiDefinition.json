@@ -72,13 +72,15 @@
             "recommendedSizes": [
               "Standard_D3_v2",
               "Standard_D4_v2",
-              "Standard_DS4_v2"
+              "Standard_D3",
+              "Standard_D4"
             ],
             "constraints": {
               "allowedSizes": [
                 "Standard_D3_v2",
                 "Standard_D4_v2",
-                "Standard_DS4_v2"
+                "Standard_D3",
+                "Standard_D4"
               ]
                           },
             "osPlatform": "Linux",

@@ -124,12 +124,6 @@
       },
       "storageAccountType": {
         "type": "string",
-        "defaultValue": "Standard_LRS",
-        "allowedValues": [
-          "Standard_LRS",
-          "Standard_GRS",
-          "Premium_LRS"
-        ],
         "metadata": {
           "description": "The type of storage account created."
         }
@@ -194,13 +188,6 @@
       },
       "vmSize": {
         "type": "string",
-        "defaultValue": "Standard_D3_v2",
-        "allowedValues": [
-          "Standard_D3_v2",
-          "Standard_D4_v2",
-          "Standard_D3",
-          "Standard_D4"
-        ],
         "metadata": {
           "description": "Size of the Virtual Machine"
         }
@@ -211,7 +198,7 @@
               "",
               "-preview"
             ],
-            "type": "String",
+            "type": "string",
             "metadata": {
                 "description": "Specifies an additional qualifier to use for Marketplace image references. The value 'preview' is for images in staging, while the default value references production images."
             }
@@ -221,7 +208,7 @@
     "imagePublisher": "citrix",
     "imageOffer": "[concat('netscaler-sd-wan', parameters('imageQualifier'))]",
     "imageSKU": "netscalersd-wanstandardedition",
-    "OSDiskName": "[concat(parameters('vmName'),'-disk')]",
+    "OSDiskName": "[concat(parameters('vmName'),uniquestring(deployment().name),'-disk')]",
     "vmStorageAccountContainerName": "vhds",
     "vnetID": "[resourceId('Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
     "subnet1Ref": "[concat(variables('vnetID'),'/subnets/', parameters('Subnet1Name'))]",
@@ -344,6 +331,48 @@
                 "priority": 102,
                 "direction": "Outbound"
               }
+            },
+            {
+              "name": "TCP-Rule",
+              "properties": {
+                "description": "Allow TCP",
+                "protocol": "Tcp",
+                "sourcePortRange": "22",
+                "destinationPortRange": "22",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 103,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "TCP-Rule-1",
+              "properties": {
+                "description": "Allow TCP",
+                "protocol": "Tcp",
+                "sourcePortRange": "443",
+                "destinationPortRange": "443",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 104,
+                "direction": "Inbound"
+              }
+            },
+            {
+              "name": "TCP-Rule-2",
+              "properties": {
+                "description": "Allow TCP",
+                "protocol": "Tcp",
+                "sourcePortRange": "80",
+                "destinationPortRange": "80",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 105,
+                "direction": "Inbound"
+              }
             }
           ]
         },
@@ -411,7 +440,12 @@
                 "privateIPAllocationMethod": "Static",
                 "privateIPAddress": "[parameters('subnet1StartAddress')]",
                 "subnet": {
-                  "id": "[reference('Microsoft.Resources/deployments/SettingUpVirtualNetwork', '2015-01-01').outputs.subnet1Ref.value]"
+                  "id": "[reference('Microsoft.Resources/deployments/SettingUpVirtualNetwork', '2015-01-01').outputs.subnet1Ref.value]",
+                  "properties": {
+                    "networkSecurityGroup": {
+                      "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('nsgname'))]"
+                    }
+                  }
                 },
                 "publicIPAddress": {
                   "id": "[resourceId('Microsoft.Network/publicIPAddresses',parameters('publicIPAddressName'))]"
@@ -419,10 +453,7 @@
               }
             }
           ],
-          "networkSecurityGroup": {
-            "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('nsgname'))]"
-          },
-          "enableIPForwarding": true
+           "enableIPForwarding": true
         }
       },
       {
@@ -441,7 +472,12 @@
                 "privateIPAllocationMethod": "Static",
                 "privateIPAddress": "[parameters('subnet2StartAddress')]",
                 "subnet": {
-                  "id": "[reference('Microsoft.Resources/deployments/SettingUpVirtualNetwork', '2015-01-01').outputs.subnet2Ref.value]"
+                  "id": "[reference('Microsoft.Resources/deployments/SettingUpVirtualNetwork', '2015-01-01').outputs.subnet2Ref.value]",
+                  "properties": {
+                    "networkSecurityGroup": {
+                      "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('nsgname'))]"
+                    }
+                  }
                 }
               }
             }
@@ -465,7 +501,12 @@
                 "privateIPAllocationMethod": "Static",
                 "privateIPAddress": "[parameters('subnet3StartAddress')]",
                 "subnet": {
-                  "id": "[reference('Microsoft.Resources/deployments/SettingUpVirtualNetwork', '2015-01-01').outputs.subnet3Ref.value]"
+                  "id": "[reference('Microsoft.Resources/deployments/SettingUpVirtualNetwork', '2015-01-01').outputs.subnet3Ref.value]",
+                  "properties": {
+                    "networkSecurityGroup": {
+                      "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('nsgname'))]"
+                    }
+                  }
                 }
               }
             }
@@ -476,7 +517,7 @@
       {
         "type": "Microsoft.Compute/virtualMachines",
         "name": "cbvw",
-        "apiVersion": "2016-04-30-preview",
+        "apiVersion": "2017-03-30",
         "location": "[parameters('Location')]",
         "plan": {
           "name": "[variables('imageSKU')]",
@@ -542,3 +583,4 @@
       }
     ]
   }
+

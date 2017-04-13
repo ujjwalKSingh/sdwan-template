@@ -13,10 +13,7 @@
     },
     "storageAccountType": {
       "type": "string",
-      "allowedValues": [
-        "Standard_LRS"
-      ],
-      "metadata": {
+            "metadata": {
         "Description": "The type of the Storage Account created"
       },
       "defaultValue": "Standard_LRS"

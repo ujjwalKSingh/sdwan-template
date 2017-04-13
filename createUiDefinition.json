@@ -1,4 +1,4 @@
-{
+    {
   "$schema": "https://schema.management.azure.com/schemas/0.1.2-preview/CreateUIDefinition.MultiVm.json#",
   "handler": "Microsoft.Compute.MultiVm",
   "version": "0.1.2-preview",
@@ -22,7 +22,9 @@
             "label": "Virtual Machine name",
             "toolTip": "The name of the Virtual Machine.",
             "constraints": {
-              "required": true
+              "required": true,
+              "regex": "^[A-Za-z0-9]{1,15}$",
+              "validationMessage": "VM name must be alphanumeric and between 1 to 15 characters in length."
             }
           },
           {
@@ -37,7 +39,7 @@
           },
           {
             "name": "Credentials",
-            "type": "Microsoft.Common.PasswordBox",
+            "type": "Microsoft.Compute.CredentialsCombo",
             "label": {
               "password": "Password",
               "confirmPassword": "Confirm password"
@@ -71,17 +73,13 @@
             "toolTip": "The size of virtual machine to provision.",
             "recommendedSizes": [
               "Standard_D3_v2",
-              "Standard_D4_v2",
-              "Standard_D3",
-              "Standard_D4"
-            ],
+              "Standard_D4_v2"
+              ],
             "constraints": {
               "allowedSizes": [
                 "Standard_D3_v2",
-                "Standard_D4_v2",
-                "Standard_D3",
-                "Standard_D4"
-              ]
+                "Standard_D4_v2"
+                ]
                           },
             "osPlatform": "Linux",
             "imageReference": {
@@ -101,10 +99,8 @@
             },
             "constraints": {
               "allowedTypes": [
-                "Standard_LRS",
-                "Standard_GRS",
-                "Premium_LRS"
-              ]
+                "Standard_LRS"
+                ]
               
             }
           },
@@ -123,6 +119,11 @@
             },
             "options": {
               "hideNone": true
+            },
+            "constraints": {
+              "required": {
+                "domainNameLabel": true
+              }
             }
           },
           {
@@ -148,24 +149,22 @@
                 "label": "WAN subnet",
                 "constraints": {
                   "minAddressPrefixSize": "/24",
-                  "minAddressCount": 12,
-                  "requireContiguousAddresses": false
+                  "minAddressCount": 1
+                  
                 }
               },
               "subnet2": {
                 "label": "LAN subnet",
                 "constraints": {
                   "minAddressPrefixSize": "/24",
-                  "minAddressCount": 12,
-                  "requireContiguousAddresses": false
+                  "minAddressCount": 1
                 }
               },
               "subnet3": {
                 "label": "Management subnet",
                 "constraints": {
                   "minAddressPrefixSize": "/24",
-                  "minAddressCount": 12,
-                  "requireContiguousAddresses": false
+                  "minAddressCount": 1
                 }
               }
             }
@@ -176,7 +175,7 @@
     "outputs": {
       "vmName": "[steps('infraConfig').Name]",
       "adminUsername": "[steps('infraConfig').adminUsername]",
-      "adminPassword": "[steps('infraConfig').Credentials]",
+      "adminPassword": "[steps('infraConfig').Credentials.password]",
       "vmSize": "[steps('SDWANmyapplianceConfig').Size]",
       "Location": "[location()]",
       "newStorageAccountName": "[steps('SDWANmyapplianceConfig').storageAccount.name]",

@@ -1,4 +1,4 @@
-    {
+{
   "$schema": "https://schema.management.azure.com/schemas/0.1.2-preview/CreateUIDefinition.MultiVm.json#",
   "handler": "Microsoft.Compute.MultiVm",
   "version": "0.1.2-preview",
@@ -105,10 +105,32 @@
             }
           },
           {
-            "name": "publicIpAddress",
+            "name": "MgmtpublicIpAddress",
             "type": "Microsoft.Network.PublicIpAddressCombo",
             "label": {
-              "publicIpAddress": "Public IP address",
+              "publicIpAddress": "Public IP address for management access",
+              "domainNameLabel": "DNS label"
+            },
+            "toolTip": {
+              "domainNameLabel": "DNS label for the Virtual Machine's public IP address."
+            },
+            "defaultValue": {
+              "publicIpAddressName": ""
+            },
+            "options": {
+              "hideNone": true
+            },
+            "constraints": {
+              "required": {
+                "domainNameLabel": true
+              }
+            }
+          },
+          {
+            "name": "VIPpublicIpAddress",
+            "type": "Microsoft.Network.PublicIpAddressCombo",
+            "label": {
+              "publicIpAddress": "Public IP address for VIP",
               "domainNameLabel": "DNS label"
             },
             "toolTip": {
@@ -146,7 +168,7 @@
             },
             "subnets": {
               "subnet1": {
-                "label": "WAN subnet",
+                "label": "Manangement subnet",
                 "constraints": {
                   "minAddressPrefixSize": "/24",
                   "minAddressCount": 1
@@ -161,7 +183,7 @@
                 }
               },
               "subnet3": {
-                "label": "Management subnet",
+                "label": "WAN subnet",
                 "constraints": {
                   "minAddressPrefixSize": "/24",
                   "minAddressCount": 1
@@ -182,10 +204,14 @@
       "storageAccountType": "[steps('SDWANmyapplianceConfig').storageAccount.type]",
       "storageAccountNewOrExisting": "[steps('SDWANmyapplianceConfig').storageAccount.newOrExisting]",
       "storageAccountExistingRG": "[steps('SDWANmyapplianceConfig').storageAccount.resourceGroup]",
-      "publicIPAddressName": "[steps('SDWANmyapplianceConfig').publicIpAddress.name]",
-      "publicIPDnsName": "[steps('SDWANmyapplianceConfig').publicIpAddress.domainNameLabel]",
-      "publicIPNewOrExisting": "[steps('SDWANmyapplianceConfig').publicIpAddress.newOrExistingOrNone]",
-      "publicIPExistingRGName": "[steps('SDWANmyapplianceConfig').publicIpAddress.resourceGroup]",
+      "MgmtpublicIPAddressName": "[steps('SDWANmyapplianceConfig').MgmtpublicIpAddress.name]",
+      "MgmtpublicIPDnsName": "[steps('SDWANmyapplianceConfig').MgmtpublicIpAddress.domainNameLabel]",
+      "MgmtpublicIPNewOrExisting": "[steps('SDWANmyapplianceConfig').MgmtpublicIpAddress.newOrExistingOrNone]",
+      "MgmtpublicIPExistingRGName": "[steps('SDWANmyapplianceConfig').MgmtpublicIpAddress.resourceGroup]",
+      "VIPpublicIPAddressName": "[steps('SDWANmyapplianceConfig').VIPpublicIpAddress.name]",
+      "VIPpublicIPDnsName": "[steps('SDWANmyapplianceConfig').VIPpublicIpAddress.domainNameLabel]",
+      "VIPpublicIPNewOrExisting": "[steps('SDWANmyapplianceConfig').VIPpublicIpAddress.newOrExistingOrNone]",
+      "VIPpublicIPExistingRGName": "[steps('SDWANmyapplianceConfig').VIPpublicIpAddress.resourceGroup]",
       "virtualNetworkName": "[steps('SDWANmyapplianceConfig').virtualNetwork.name]",
       "virtualNetworkAddressPrefix": "[steps('SDWANmyapplianceConfig').virtualNetwork.addressPrefix]",
       "Subnet1Name": "[steps('SDWANmyapplianceConfig').virtualNetwork.subnets.subnet1.name]",

@@ -1,0 +1,38 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": {
+      "type": "string"
+    },
+    "VIPpublicIPAddressName": {
+      "type": "string"
+    },
+    "VIPpublicIPAddressType": {
+      "type": "string"
+    },
+    "VIPdnsPrefix": {
+      "type": "string"
+    },
+    "VIPpublicIpRGName": {
+      "type": "string"
+    },
+    "VIPpublicIPNewOrExisting" : {
+      "type" : "string"
+    }
+  },
+  "variables": {
+    "publicIpId": "[resourceId(parameters('VIPpublicIpRGName'),concat('Microsoft.Network','/','publicIPAddresses'),parameters('VIPpublicIPAddressName'))]"
+  },
+  "resources": [],
+  "outputs": {
+    "publicIpId": {
+      "value": "[variables('publicIpId')]",
+      "type": "string"
+    },
+    "fqdn": {
+      "value": "[reference(variables('publicIpId'),'2015-06-15').dnsSettings.fqdn]",
+      "type": "string"
+    }
+  }
+}
